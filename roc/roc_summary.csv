@@ -1,0 +1,9 @@
+Classification,TimePoint,PositiveClass,SamplesUsed,AUC
+IGHV,MRD 9 months,M-CLL,15,0.7777777777777778
+IGHV,MRD 12 months,M-CLL,15,0.8518518518518519
+IGHV,MRD 18 months,M-CLL,15,0.8333333333333334
+IGHV,MRD 24 months,M-CLL,15,0.7870370370370371
+Migration,MRD 9 months,Responder,15,0.9545454545454546
+Migration,MRD 12 months,Responder,15,0.9772727272727273
+Migration,MRD 18 months,Responder,15,1.0
+Migration,MRD 24 months,Responder,15,0.9772727272727273
