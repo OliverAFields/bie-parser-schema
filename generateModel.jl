@@ -7,7 +7,7 @@ originalParams=deepcopy(parametersDF)
 thisModelName="odeModel.jl"
 thisParamFile=parametersFile
 arguments=[reactionsFile, thisParamFile, rateLawsFile,thisModelName]
-cmd=`python3 $locationOfCSV2Julia $arguments param`
+cmd=`python $locationOfCSV2Julia $arguments param`
 
 #lets run csv2julia (requires python to be installed)
 run(cmd)

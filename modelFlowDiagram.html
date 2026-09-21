@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BCR–TLR9–NF-κB Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0}
+:root{
+  --bg:#f5f7f9; --panel:#ffffff; --ink:#18212c; --muted:#5a6674; --line:#c7cfd9; --nuc:#eef1f6;
+  --bcr:#2a64a8; --bcr-tint:#e6eef8; --tlr:#a8581a; --tlr-tint:#f8ece2;
+  --fb:#c23b2e; --pos:#6b7684;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#11151b; --panel:#1a2029; --ink:#e5e9ef; --muted:#98a2b0; --line:#3a4453; --nuc:#161c24;
+    --bcr:#74a7e3; --bcr-tint:#1b2a3d; --tlr:#e39d62; --tlr-tint:#33241a;
+    --fb:#f07565; --pos:#8e98a6;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#11151b; --panel:#1a2029; --ink:#e5e9ef; --muted:#98a2b0; --line:#3a4453; --nuc:#161c24;
+  --bcr:#74a7e3; --bcr-tint:#1b2a3d; --tlr:#e39d62; --tlr-tint:#33241a;
+  --fb:#f07565; --pos:#8e98a6;
+}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:36px 56px}
+h1{font:600 clamp(26px,4vw,36px)/1.15 "Source Serif 4",Georgia,serif;margin:0 0 10px;text-wrap:balance}
+h2{font:600 20px/1.3 "Source Serif 4",Georgia,serif;margin:0 0 8px;text-wrap:balance}
+.lede{max-width:68ch;color:var(--muted);margin:0 0 24px}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-size:.9em}
+figure{margin:0 0 28px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+.scroll{overflow-x:auto}
+svg.map{display:block;width:100%;min-width:760px;height:auto;color:var(--ink)}
+figcaption{margin-top:12px;color:var(--muted);font-size:14px;max-width:80ch}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:12px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.sw{width:22px;height:12px;border-radius:3px;border:1.5px solid}
+.sw.bcr{background:var(--bcr-tint);border-color:var(--bcr)}
+.sw.tlr{background:var(--tlr-tint);border-color:var(--tlr)}
+.sw.hub{background:var(--panel);border:2.5px solid var(--ink)}
+.sw.out{background:var(--ink);border-color:var(--ink)}
+.ln{width:26px;height:0;border-top:2px dashed}
+.ln.neg{border-color:var(--fb)} .ln.pos{border-color:var(--pos)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.cols section{max-width:62ch}
+ol,ul{padding-left:1.2em;margin:0} li{margin-bottom:6px}
+.muted{color:var(--muted)}
+
+/* SVG parts */
+.map .band{font:600 11px "IBM Plex Sans",sans-serif;letter-spacing:.12em;fill:var(--muted)}
+.map .mem{stroke:var(--line);stroke-width:1.5}
+.map .nucleus{fill:var(--nuc);stroke:var(--muted);stroke-width:1.2;stroke-dasharray:6 5}
+.map .node rect{fill:var(--panel);stroke:var(--line);stroke-width:1.3}
+.map .node.bcr rect{fill:var(--bcr-tint);stroke:var(--bcr)}
+.map .node.tlr rect{fill:var(--tlr-tint);stroke:var(--tlr)}
+.map .node.input rect{stroke-width:2;stroke-dasharray:5 3}
+.map .node.hub rect{stroke:var(--ink);stroke-width:2.5}
+.map .node.out rect{fill:var(--ink);stroke:var(--ink)}
+.map .node.out text{fill:var(--bg)}
+.map .n{font:600 13px "IBM Plex Sans",sans-serif;fill:var(--ink);text-anchor:middle}
+.map .id{font:400 10.5px "IBM Plex Mono",monospace;fill:var(--muted);text-anchor:middle}
+.map .node.out .id{fill:var(--bg);opacity:.8}
+.map .a{fill:none;stroke:var(--ink);stroke-width:1.5}
+.map .a.bcr{stroke:var(--bcr)} .map .a.tlr{stroke:var(--tlr)}
+.map .a.neg{stroke:var(--fb);stroke-dasharray:6 4;stroke-width:1.7}
+.map .a.pos{stroke:var(--pos);stroke-dasharray:6 4}
+.map .lbl{font:italic 11.5px "IBM Plex Sans",sans-serif;fill:var(--muted)}
+.map .lbl.neg{fill:var(--fb)}
+.map .m-ink{fill:var(--ink)} .map .m-bcr{fill:var(--bcr)} .map .m-tlr{fill:var(--tlr)}
+.map .m-neg{fill:var(--fb)} .map .m-pos{fill:var(--pos)} .map .m-bar{stroke:var(--fb);stroke-width:3}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <h1>BCR–TLR9–NF-κB: how one cell responds</h1>
+  <p class="lede">This is the biology encoded in the model's CSV modules. Tonic B-cell receptor signalling and a CpG/TLR9 pulse converge on one shared TAK1 pool. TAK1 switches on IKK, and IKK frees NF-κB to enter the nucleus. Nuclear NF-κB then induces its own inhibitors (IκBα, IκBε, A20), each after a fixed transcriptional lag.</p>
+
+  <figure>
+    <div class="scroll">
+    <svg class="map" viewBox="0 0 1040 1205" role="img" aria-label="Flow diagram: tonic BCR signal activates CARD11 and CBM complexes; a CpG pulse is internalised, binds TLR9 and activates MYD88 then TRAF6. Both arms activate a shared TAK1 pool, which activates IKK. IKK degrades IκB, releasing NF-κB, which enters the nucleus and induces IκBα (15 min lag), IκBε (45 min), A20 (no lag), p50 and RelB (60 min), p100 (240 min) and cRel (720 min). IκBs re-capture NF-κB and A20 switches IKK off (negative feedback); IKK also boosts TAK1 (positive feedback).">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-ink" d="M0 0 L10 5 L0 10 z"/></marker>
+        <marker id="ah-bcr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-bcr" d="M0 0 L10 5 L0 10 z"/></marker>
+        <marker id="ah-tlr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-tlr" d="M0 0 L10 5 L0 10 z"/></marker>
+        <marker id="ah-neg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-neg" d="M0 0 L10 5 L0 10 z"/></marker>
+        <marker id="ah-pos" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-pos" d="M0 0 L10 5 L0 10 z"/></marker>
+        <marker id="bar" viewBox="0 0 4 16" refX="2" refY="8" markerWidth="4" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"><line class="m-bar" x1="2" y1="0" x2="2" y2="16"/></marker>
+      </defs>
+
+      <!-- compartments -->
+      <text class="band" x="24" y="26">OUTSIDE THE CELL</text>
+      <line class="mem" x1="20" y1="107" x2="1020" y2="107"/>
+      <line class="mem" x1="20" y1="113" x2="1020" y2="113"/>
+      <text class="lbl" x="1020" y="100" text-anchor="end">plasma membrane</text>
+      <text class="band" x="24" y="136">CYTOPLASM</text>
+      <rect class="nucleus" x="20" y="780" width="1000" height="330" rx="18"/>
+      <text class="band" x="40" y="804">NUCLEUS</text>
+
+      <!-- ===== BCR arm ===== -->
+      <g class="node bcr input"><rect x="60" y="40" width="280" height="44" rx="7"/><text class="n" x="200" y="59">Tonic BCR signal</text><text class="id" x="200" y="75">k3_signal: 0 (M-CLL) · 0.005 (U-CLL)</text></g>
+      <g class="node bcr"><rect x="80" y="153" width="240" height="44" rx="7"/><text class="n" x="200" y="172">CARD11 phosphorylated</text><text class="id" x="200" y="188">C → Cp</text></g>
+      <g class="node bcr"><rect x="80" y="258" width="240" height="44" rx="7"/><text class="n" x="200" y="277">CBM complex assembles</text><text class="id" x="200" y="293">Cp + BCL10 + MALT1 → CpBM</text></g>
+      <path class="a bcr" d="M200 84 V151" marker-end="url(#ah-bcr)"/>
+      <text class="lbl" x="208" y="138">drives</text>
+      <path class="a bcr" d="M200 197 V256" marker-end="url(#ah-bcr)"/>
+      <path class="a bcr" d="M200 302 V460 H358" marker-end="url(#ah-bcr)"/>
+      <text class="lbl" x="208" y="390">phosphorylates &amp; binds TAK1</text>
+
+      <!-- ===== TLR9 arm ===== -->
+      <g class="node tlr input"><rect x="700" y="40" width="280" height="44" rx="7"/><text class="n" x="840" y="59">CpG pulse (differs per cell)</text><text class="id" x="840" y="75">k1_CpGadding: peak time t*, height H</text></g>
+      <g class="node tlr"><rect x="720" y="153" width="240" height="44" rx="7"/><text class="n" x="840" y="172">CpG internalised</text><text class="id" x="840" y="188">CpGmedia → CpG1 → CpG</text></g>
+      <g class="node tlr"><rect x="720" y="223" width="240" height="44" rx="7"/><text class="n" x="840" y="242">CpG binds TLR9</text><text class="id" x="840" y="258">CpG + TLR9 → CpGTLR9</text></g>
+      <g class="node tlr"><rect x="720" y="293" width="240" height="44" rx="7"/><text class="n" x="840" y="312">MYD88 activated</text><text class="id" x="840" y="328">MYD88 → MYD88s (Hill)</text></g>
+      <g class="node tlr"><rect x="720" y="363" width="240" height="44" rx="7"/><text class="n" x="840" y="382">TRAF6 activated</text><text class="id" x="840" y="398">TRAF6 → TRAF6s</text></g>
+      <path class="a tlr" d="M840 84 V151" marker-end="url(#ah-tlr)"/>
+      <text class="lbl" x="848" y="138">taken up</text>
+      <path class="a tlr" d="M840 197 V221" marker-end="url(#ah-tlr)"/>
+      <path class="a tlr" d="M840 267 V291" marker-end="url(#ah-tlr)"/>
+      <path class="a tlr" d="M840 337 V361" marker-end="url(#ah-tlr)"/>
+      <path class="a tlr" d="M840 407 V460 H682" marker-end="url(#ah-tlr)"/>
+      <text class="lbl" x="760" y="452" text-anchor="middle">phosphorylates TAK1</text>
+
+      <!-- ===== convergence ===== -->
+      <g class="node hub"><rect x="360" y="438" width="320" height="44" rx="7"/><text class="n" x="520" y="457">Shared TAK1 pool</text><text class="id" x="520" y="473">TAK1 → TAK1p · TAK1C → TAK1pC (CBM-bound)</text></g>
+      <g class="node"><rect x="380" y="533" width="280" height="44" rx="7"/><text class="n" x="520" y="552">IKK activated</text><text class="id" x="520" y="568">IKK_off → IKK_on → IKK_i → IKK_off</text></g>
+      <g class="node"><rect x="740" y="533" width="200" height="44" rx="7"/><text class="n" x="840" y="552">A20 protein</text><text class="id" x="840" y="568">A20</text></g>
+      <g class="node"><rect x="350" y="628" width="340" height="44" rx="7"/><text class="n" x="520" y="647">IκB : NF-κB (held inactive)</text><text class="id" x="520" y="663">IκBα/β/ε bound to RelA:p50 and other dimers</text></g>
+      <g class="node"><rect x="400" y="713" width="240" height="44" rx="7"/><text class="n" x="520" y="732">Free NF-κB</text><text class="id" x="520" y="748">RelAp50 (cytoplasmic)</text></g>
+
+      <path class="a" d="M520 482 V531" marker-end="url(#ah)"/>
+      <text class="lbl" x="528" y="512">activates</text>
+      <path class="a pos" d="M420 533 V484" marker-end="url(#ah-pos)"/>
+      <text class="lbl" x="412" y="512" text-anchor="end">IKK_on boosts TAK1</text>
+      <path class="a neg" d="M740 555 H666" marker-end="url(#bar)"/>
+      <text class="lbl neg" x="701" y="546" text-anchor="middle">switches off</text>
+      <path class="a" d="M520 577 V626" marker-end="url(#ah)"/>
+      <text class="lbl" x="528" y="606">phosphorylates IκB → degraded</text>
+      <path class="a" d="M520 672 V711" marker-end="url(#ah)"/>
+      <text class="lbl" x="528" y="696">releases dimer</text>
+      <path class="a" d="M520 757 V816" marker-end="url(#ah)"/>
+      <text class="lbl" x="528" y="800">nuclear import</text>
+
+      <!-- ===== nucleus ===== -->
+      <g class="node out"><rect x="390" y="818" width="260" height="44" rx="7"/><text class="n" x="520" y="837">Nuclear NF-κB</text><text class="id" x="520" y="853">RelAnp50n · plotted readout</text></g>
+      <path class="a" d="M520 862 V900 M135 900 H910"/>
+      <text class="lbl" x="528" y="889">induces transcription after a lag</text>
+      <path class="a" d="M135 900 V936" marker-end="url(#ah)"/>
+      <path class="a" d="M290 900 V936" marker-end="url(#ah)"/>
+      <path class="a" d="M445 900 V936" marker-end="url(#ah)"/>
+      <path class="a" d="M600 900 V936" marker-end="url(#ah)"/>
+      <path class="a" d="M755 900 V936" marker-end="url(#ah)"/>
+      <path class="a" d="M910 900 V936" marker-end="url(#ah)"/>
+
+      <g class="node"><rect x="65" y="938" width="140" height="44" rx="7"/><text class="n" x="135" y="957">IκBα mRNA</text><text class="id" x="135" y="973">tIkBa · +15 min</text></g>
+      <g class="node"><rect x="220" y="938" width="140" height="44" rx="7"/><text class="n" x="290" y="957">IκBε mRNA</text><text class="id" x="290" y="973">tIkBe · +45 min</text></g>
+      <g class="node"><rect x="375" y="938" width="140" height="44" rx="7"/><text class="n" x="445" y="957">p50, RelB mRNA</text><text class="id" x="445" y="973">tp50 tRelB · +60 min</text></g>
+      <g class="node"><rect x="530" y="938" width="140" height="44" rx="7"/><text class="n" x="600" y="957">p100 mRNA</text><text class="id" x="600" y="973">tp100 · +240 min</text></g>
+      <g class="node"><rect x="685" y="938" width="140" height="44" rx="7"/><text class="n" x="755" y="957">cRel mRNA</text><text class="id" x="755" y="973">tcRel · +720 min</text></g>
+      <g class="node"><rect x="840" y="938" width="140" height="44" rx="7"/><text class="n" x="910" y="957">A20 mRNA</text><text class="id" x="910" y="973">tA20 · no lag</text></g>
+
+      <!-- negative feedback: IκBα / IκBε -->
+      <path class="a neg" d="M135 982 V1045 H60 V650 H348" marker-end="url(#ah-neg)"/>
+      <path class="a neg" d="M290 982 V1045 H135"/>
+      <text class="lbl neg" x="70" y="641">new IκBα/ε re-capture NF-κB</text>
+      <!-- negative feedback: A20 -->
+      <path class="a neg" d="M980 960 H1005 V555 H942" marker-end="url(#ah-neg)"/>
+      <text class="lbl neg" transform="translate(1022 760) rotate(-90)" text-anchor="middle">A20 protein made</text>
+
+      <!-- slow rewiring -->
+      <path class="a" d="M445 982 V1136" marker-end="url(#ah)"/>
+      <path class="a" d="M600 982 V1136" marker-end="url(#ah)"/>
+      <path class="a" d="M755 982 V1136" marker-end="url(#ah)"/>
+      <text class="lbl" x="453" y="1070">translated</text>
+      <g class="node"><rect x="340" y="1138" width="520" height="44" rx="7"/><text class="n" x="600" y="1157">Slower rewiring of the NF-κB network</text><text class="id" x="600" y="1173">new RelA/RelB/cRel dimers · p100 ⇄ IκBδ · NIK: p100 → p52</text></g>
+    </svg>
+    </div>
+    <div class="legend" aria-hidden="true">
+      <span><i class="sw bcr"></i>BCR module</span>
+      <span><i class="sw tlr"></i>TLR9 module</span>
+      <span><i class="sw hub"></i>Where the arms converge (linking module)</span>
+      <span><i class="sw out"></i>Readout</span>
+      <span><i class="ln neg"></i>Negative feedback</span>
+      <span><i class="ln pos"></i>Positive feedback</span>
+      <span>Dashed box = input set per condition or per cell</span>
+    </div>
+    <figcaption>Both receptor arms converge on TAK1, so the BCR tone a cell already has sets how primed its IKK is when CpG arrives. The shut-off comes from nuclear NF-κB itself: IκBα returns after about 15 minutes and A20 with no lag, while p100/IκBδ and cRel reshape the network hours later. Labels in <span class="mono">mono</span> are species names from <span class="mono">variableNames.jl</span>. IκBβ and RelA are made at constant rates, and the NIK input is held at 1 in both conditions.</figcaption>
+  </figure>
+
+  <div class="cols">
+    <section>
+      <h2>What each simulated cell goes through</h2>
+      <ol>
+        <li><strong>Resting phase (1,000 h).</strong> Only the tonic BCR signal is on and there's no CpG. The cell settles to its own baseline of TAK1, IKK and NF-κB.</li>
+        <li><strong>CpG pulse (24 h).</strong> CpG rises smoothly to height <em>H</em> at time <em>t*</em>, then slowly decays. NF-κB enters the nucleus, and its feedback genes then pull it back out.</li>
+        <li><strong>Readouts.</strong> Nuclear RelA:p50 and total IκBα (all forms summed), averaged over 15 cells.</li>
+      </ol>
+    </section>
+    <section>
+      <h2>Why the cells differ</h2>
+      <ul>
+        <li>Each cell gets its own CpG timing <em>t*</em> (median about 25 min, up to 12 h) and height <em>H</em>. Around 1 in 6 cells get <em>H</em> = 0 and don't respond.</li>
+        <li>Rate constants flagged <span class="mono">distribute</span> are scaled by about ±11% per cell.</li>
+        <li><strong>M-CLL vs U-CLL</strong> differ only in tonic BCR input (0 vs 0.005), so the conditions differ in their baseline before the CpG pulse arrives.</li>
+      </ul>
+    </section>
+  </div>
+</div>
+</body>
+</html>
