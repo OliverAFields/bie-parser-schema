@@ -82,7 +82,7 @@ ol,ul{padding-left:1.2em;margin:0} li{margin-bottom:6px}
 
   <figure>
     <div class="scroll">
-    <svg class="map" viewBox="0 0 1040 1205" role="img" aria-label="Flow diagram: tonic BCR signal activates CARD11 and CBM complexes; a CpG pulse is internalised, binds TLR9 and activates MYD88 then TRAF6. Both arms activate a shared TAK1 pool, which activates IKK. IKK degrades IκB, releasing NF-κB, which enters the nucleus and induces IκBα (15 min lag), IκBε (45 min), A20 (no lag), p50 and RelB (60 min), p100 (240 min) and cRel (720 min). IκBs re-capture NF-κB and A20 switches IKK off (negative feedback); IKK also boosts TAK1 (positive feedback).">
+    <svg class="map" viewBox="0 0 1040 1205" role="img" aria-label="Flow diagram: tonic BCR signal activates CARD11 and CBM complexes; a CpG pulse is internalised, binds TLR9 and activates MYD88 then TRAF6. Both arms activate a shared TAK1 pool, which activates IKK. IKK degrades IκB, releasing NF-κB, which enters the nucleus and induces IκBα (15 min lag), IκBε (45 min), A20 (no lag), p50 and RelB (60 min), p100 (240 min) and cRel (720 min). IκBs re-capture NF-κB and A20 switches IKK off (negative feedback). A NIK stability input feeds the slower p100/IκBδ rewiring.">
       <defs>
         <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-ink" d="M0 0 L10 5 L0 10 z"/></marker>
         <marker id="ah-bcr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-bcr" d="M0 0 L10 5 L0 10 z"/></marker>
@@ -109,7 +109,8 @@ ol,ul{padding-left:1.2em;margin:0} li{margin-bottom:6px}
       <text class="lbl" x="208" y="138">drives</text>
       <path class="a bcr" d="M200 197 V256" marker-end="url(#ah-bcr)"/>
       <path class="a bcr" d="M200 302 V460 H358" marker-end="url(#ah-bcr)"/>
-      <text class="lbl" x="208" y="390">phosphorylates &amp; binds TAK1</text>
+      <text class="lbl" x="208" y="384">phosphorylates free TAK1</text>
+      <text class="lbl" x="208" y="399">+ binds TAK1 to CBM (TAK1C)</text>
 
       <!-- ===== TLR9 arm ===== -->
       <g class="node tlr input"><rect x="700" y="40" width="280" height="44" rx="7"/><text class="n" x="840" y="59">CpG pulse (differs per cell)</text><text class="id" x="840" y="75">k1_CpGadding: peak time t*, height H</text></g>
@@ -123,7 +124,8 @@ ol,ul{padding-left:1.2em;margin:0} li{margin-bottom:6px}
       <path class="a tlr" d="M840 267 V291" marker-end="url(#ah-tlr)"/>
       <path class="a tlr" d="M840 337 V361" marker-end="url(#ah-tlr)"/>
       <path class="a tlr" d="M840 407 V460 H682" marker-end="url(#ah-tlr)"/>
-      <text class="lbl" x="760" y="452" text-anchor="middle">phosphorylates TAK1</text>
+      <text class="lbl" x="760" y="436" text-anchor="middle">phosphorylates TAK1</text>
+      <text class="lbl" x="760" y="451" text-anchor="middle">and CBM-bound TAK1C</text>
 
       <!-- ===== convergence ===== -->
       <g class="node hub"><rect x="360" y="438" width="320" height="44" rx="7"/><text class="n" x="520" y="457">Shared TAK1 pool</text><text class="id" x="520" y="473">TAK1 → TAK1p · TAK1C → TAK1pC (CBM-bound)</text></g>
@@ -134,8 +136,6 @@ ol,ul{padding-left:1.2em;margin:0} li{margin-bottom:6px}
 
       <path class="a" d="M520 482 V531" marker-end="url(#ah)"/>
       <text class="lbl" x="528" y="512">activates</text>
-      <path class="a pos" d="M420 533 V484" marker-end="url(#ah-pos)"/>
-      <text class="lbl" x="412" y="512" text-anchor="end">IKK_on boosts TAK1</text>
       <path class="a neg" d="M740 555 H666" marker-end="url(#bar)"/>
       <text class="lbl neg" x="701" y="546" text-anchor="middle">switches off</text>
       <path class="a" d="M520 577 V626" marker-end="url(#ah)"/>
@@ -176,6 +176,8 @@ ol,ul{padding-left:1.2em;margin:0} li{margin-bottom:6px}
       <path class="a" d="M600 982 V1136" marker-end="url(#ah)"/>
       <path class="a" d="M755 982 V1136" marker-end="url(#ah)"/>
       <text class="lbl" x="453" y="1070">translated</text>
+      <g class="node input"><rect x="60" y="1138" width="240" height="44" rx="7"/><text class="n" x="180" y="1157">NIK stability input</text><text class="id" x="180" y="1173">nik_deg_mod · held at 1 now</text></g>
+      <path class="a" d="M300 1160 H338" marker-end="url(#ah)"/>
       <g class="node"><rect x="340" y="1138" width="520" height="44" rx="7"/><text class="n" x="600" y="1157">Slower rewiring of the NF-κB network</text><text class="id" x="600" y="1173">new RelA/RelB/cRel dimers · p100 ⇄ IκBδ · NIK: p100 → p52</text></g>
     </svg>
     </div>
@@ -185,10 +187,9 @@ ol,ul{padding-left:1.2em;margin:0} li{margin-bottom:6px}
       <span><i class="sw hub"></i>Where the arms converge (linking module)</span>
       <span><i class="sw out"></i>Readout</span>
       <span><i class="ln neg"></i>Negative feedback</span>
-      <span><i class="ln pos"></i>Positive feedback</span>
       <span>Dashed box = input set per condition or per cell</span>
     </div>
-    <figcaption>Both receptor arms converge on TAK1, so the BCR tone a cell already has sets how primed its IKK is when CpG arrives. The shut-off comes from nuclear NF-κB itself: IκBα returns after about 15 minutes and A20 with no lag, while p100/IκBδ and cRel reshape the network hours later. Labels in <span class="mono">mono</span> are species names from <span class="mono">variableNames.jl</span>. IκBβ and RelA are made at constant rates, and the NIK input is held at 1 in both conditions.</figcaption>
+    <figcaption>Both receptor arms converge on TAK1, so the BCR tone a cell already has sets how primed its IKK is when CpG arrives. The shut-off comes from nuclear NF-κB itself: IκBα returns after about 15 minutes and A20 with no lag, while p100/IκBδ and cRel reshape the network hours later. Labels in <span class="mono">mono</span> are species names from <span class="mono">variableNames.jl</span>. IκBβ and RelA are made at constant rates, and the NIK input is held at 1 in both conditions.<br><br>This is a simplified map of the combined model (502 reactions in <span class="mono">combinedModelDefinitionFiles/reactions.csv</span>). Not drawn: RelB and cRel dimers with p50/p52 alongside RelA:p50, their IκB-bound, nuclear and cytoplasmic forms and transport, IκBδ sequestration, basal activation, degradation and translation steps, and the individual BCL10/MALT1 assembly steps. When the modules are merged, linking-module reactions replace every module reaction with the same substrate and product. As a result, CBM-bound TAK1 is phosphorylated only by TRAF6, and there is no IKK → TAK1 feedback.</figcaption>
   </figure>
 
   <div class="cols">

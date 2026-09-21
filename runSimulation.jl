@@ -57,10 +57,10 @@ function runSimulation(first_cell, last_cell, conditions,folder,BCRSSArray,BCRTC
         #define the function and the initial conditions
         if delay
 #             f=DDEFunction(myFunFixed,syms=Symbol.(syms))
-            f=DDEFunction(myFun,syms=Symbol.(syms))
+            f=DDEFunction(myFun)
         else
 #             fFixed=ODEFunction(myFunFixed,syms=Symbol.(syms))
-            f=ODEFunction(myFun,syms=Symbol.(syms))
+            f=ODEFunction(myFun)
         end
         y0=zeros(length(syms))
         y0=zeros(size(syms))
@@ -122,7 +122,7 @@ function runSimulation(first_cell, last_cell, conditions,folder,BCRSSArray,BCRTC
             
             solss=nothing
             if delay
-                solss=solve(prob,saveat=100.0,progress = true)
+                solss=solve(prob,saveat=100.0,progress = true,MethodOfSteps(Rodas5P()))
             else
                 solss=solve(prob,saveat=100.0,progress = true,Rodas4(autodiff=false))
             end
@@ -174,10 +174,10 @@ function runSimulation(first_cell, last_cell, conditions,folder,BCRSSArray,BCRTC
                 prob=nothing
                 h(p,t)=y0
                 if delay
-                    f=DDEFunction(myFun,syms=Symbol.(syms))
+                    f=DDEFunction(myFun)
                     prob=DDEProblem(f,y0,h,(0.0,maxTimeTC),thisCellsParamVals)
                 else
-                    f=ODEFunction(myFun,syms=syms)
+                    f=ODEFunction(myFun)
                     prob=ODEProblem(f,y0,(0.0,maxTimeTC),thisCellsParamVals)
                 end
                 
@@ -189,7 +189,7 @@ function runSimulation(first_cell, last_cell, conditions,folder,BCRSSArray,BCRTC
                 if delay
 #                       sol=solve(prob,MethodOfSteps(Rodas5P()); callback = cb, tstops=[TLRTimeArray[i];small], positive_domain = true, isoutofdomain = (u,p,t)->any(isnan, u) || any(<(0.0), u),reltol=1e-6, abstol=1e-9,saveat=1,maxiters=10^7,dtmin=1e-14,max_step=0.1)
 #                       sol=solve(prob,reltol=1e-6, saveat=1,MethodOfSteps(Rodas5P()),maxiters = 10^7,dtmin= 1e-14,dtmax=0.1,isoutofdomain = (u,p,t)->any(!isfinite, u) || any(<(0.0), u))
-                    sol=solve(prob,reltol=1e-6, saveat=1)
+                    sol=solve(prob,reltol=1e-6, saveat=1, MethodOfSteps(Rodas5P()))
                 else
                      sol=solve(prob,reltol=1e-6, saveat=1, Rodas4(autodiff=false))
 #                      sol=solve(prob,reltol=1e-6, saveat=1,Rodas4(autodiff=false))

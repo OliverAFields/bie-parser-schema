@@ -99,7 +99,8 @@ end
 T = 1440.0*2
 t_star=15
 
-g(s) = (s > 0 && s < 1) ? exp(-1.0/(s*(1.0 - s))) : 0.0
+# OLD - Gives NaN - g(s) = (s > 0 && s < 1) ? exp(-1.0/(s*(1.0 - s))) : 0.0
+g(s) = (s > 0 && s < 1 && s*(1.0 - s) > 1/746) ? exp(-1.0/(s*(1.0 - s))) : 0.0
 
 function ultra_smooth_bump(t)
     t_star=TLRTimeArray[globalCellIndex]

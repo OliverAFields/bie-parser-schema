@@ -53,7 +53,10 @@ function plotAllSpeciesNew(speciesToPlot,conditionsToPlot,colorArray,first_cell,
             df = DataFrame(Float64.(conditionArray),:auto)
             #add the variable names and save to a file
             #CSV.write("outputs/sol_"*thisCondition*"_cell_"*string(i)*".csv",Tables.columntable(df));
-            CSV.write(folder*"/allTCs_"*species*"_"*condition*"_cell.csv",df);
+            # - Gives error on Windows due to * in species name - CSV.write(folder*"/allTCs_"*species*"_"*condition*"_cell.csv",df);
+            # "*" (sum-of-forms shorthand, e.g. "IkBa*") is not allowed in Windows filenames
+            CSV.write(folder*"/allTCs_"*replace(species,"*"=>"_total")*"_"*condition*"_cell.csv",df);
+
 
             
             meanOfCondition=mean(conditionArray, dims=1)
